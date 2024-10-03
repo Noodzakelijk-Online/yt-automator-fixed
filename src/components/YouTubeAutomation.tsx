@@ -4,11 +4,13 @@ import { Loader2 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import VideoUploader from './VideoUploader';
 import MetadataGenerator from './MetadataGenerator';
-import TranscriptionSummary from './TranscriptionSummary';
-import SocialMediaLinks from './SocialMediaLinks';
+import TranscriptionService from './TranscriptionService';
+import SummaryGenerator from './SummaryGenerator';
 import ThumbnailGenerator from './ThumbnailGenerator';
 import KeywordSuggestions from './KeywordSuggestions';
 import RelevantTextGenerator from './RelevantTextGenerator';
+import SocialMediaLinks from './SocialMediaLinks';
+import SchedulingFeature from './SchedulingFeature';
 
 const YouTubeAutomation = () => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -67,11 +69,13 @@ const YouTubeAutomation = () => {
       {generatedData && (
         <div className="space-y-6">
           <MetadataGenerator metadata={generatedData} />
-          <TranscriptionSummary transcription={generatedData.transcription} summary={generatedData.summary} />
+          <TranscriptionService transcription={generatedData.transcription} />
+          <SummaryGenerator summary={generatedData.summary} />
           <ThumbnailGenerator thumbnailUrl={generatedData.thumbnailUrl} />
           <KeywordSuggestions keywords={generatedData.keywordSuggestions} />
           <RelevantTextGenerator text={generatedData.relevantText} />
           <SocialMediaLinks />
+          <SchedulingFeature />
         </div>
       )}
     </Card>
