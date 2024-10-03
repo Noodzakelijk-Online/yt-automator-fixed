@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
-import TitleGenerator from './TitleGenerator';
+import VideoUploader from './VideoUploader';
+import MetadataGenerator from './MetadataGenerator';
 import TranscriptionSummary from './TranscriptionSummary';
 import SocialMediaLinks from './SocialMediaLinks';
-import RelevantTextGenerator from './RelevantTextGenerator';
-import PlaylistAssigner from './PlaylistAssigner';
-import HierarchicalNumbering from './HierarchicalNumbering';
 
 const YouTubeAutomation = () => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -19,15 +17,14 @@ const YouTubeAutomation = () => {
     queryKey: ['automateYouTube'],
     queryFn: async () => {
       if (!videoFile) throw new Error('No video file selected');
-      // Here you would typically send the video file to your backend for processing
-      // For now, we'll simulate the response
+      // Simulate processing time
       await new Promise(resolve => setTimeout(resolve, 2000));
       return {
         title: 'Exciting New Features in Web Development 2024',
-        summary: 'This video covers the latest trends and features in web development for 2024, including new JavaScript APIs, CSS improvements, and performance optimizations.',
-        relevantText: 'Explore the cutting-edge advancements in web development technologies. Learn how these new features can enhance your projects and improve user experience.',
-        playlist: 'Web Development',
-        hierarchicalNumber: '#003.2A',
+        description: 'Explore the latest trends and innovations in web development for 2024. This video covers new JavaScript APIs, CSS improvements, and performance optimizations that will revolutionize how we build websites.',
+        tags: ['web development', '2024 trends', 'JavaScript', 'CSS', 'performance'],
+        transcription: 'In this video, we'll be discussing the exciting new features coming to web development in 2024...',
+        summary: 'This video provides an overview of upcoming web development trends for 2024, focusing on new JavaScript APIs, CSS enhancements, and performance optimization techniques.',
       };
     },
     enabled: false,
@@ -39,12 +36,6 @@ const YouTubeAutomation = () => {
     }
   }, [videoFile, refetch]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setVideoFile(event.target.files[0]);
-    }
-  };
-
   useEffect(() => {
     if (data) {
       setGeneratedData(data);
@@ -52,37 +43,25 @@ const YouTubeAutomation = () => {
   }, [data]);
 
   return (
-    <Card className="p-6">
-      <div className="space-y-6">
-        <div>
-          <Input 
-            id="video-upload" 
-            type="file" 
-            onChange={handleFileChange} 
-            accept="video/*"
-            className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-          />
-          {isLoading && (
-            <div className="mt-4 flex items-center justify-center">
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              <span>Processing video...</span>
-            </div>
-          )}
+    <Card className="p-6 space-y-6">
+      <VideoUploader onFileSelect={setVideoFile} />
+      
+      {isLoading && (
+        <div className="flex items-center justify-center">
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <span>Processing video...</span>
         </div>
+      )}
 
-        {error && <p className="text-red-500 mt-4">Error: {(error as Error).message}</p>}
+      {error && <p className="text-red-500">Error: {(error as Error).message}</p>}
 
-        {generatedData && (
-          <div className="mt-8 space-y-6">
-            <TitleGenerator title={generatedData.title} />
-            <TranscriptionSummary summary={generatedData.summary} />
-            <SocialMediaLinks />
-            <RelevantTextGenerator text={generatedData.relevantText} />
-            <PlaylistAssigner playlist={generatedData.playlist} />
-            <HierarchicalNumbering number={generatedData.hierarchicalNumber} />
-          </div>
-        )}
-      </div>
+      {generatedData && (
+        <div className="space-y-6">
+          <MetadataGenerator metadata={generatedData} />
+          <TranscriptionSummary transcription={generatedData.transcription} summary={generatedData.summary} />
+          <SocialMediaLinks />
+        </div>
+      )}
     </Card>
   );
 };
