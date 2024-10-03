@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 
 interface MetadataGeneratorProps {
   metadata: {
@@ -27,8 +28,12 @@ const MetadataGenerator: React.FC<MetadataGeneratorProps> = ({ metadata }) => {
           <Textarea id="description" value={metadata.description} readOnly className="h-24" />
         </div>
         <div>
-          <label htmlFor="tags" className="block text-sm font-medium text-gray-700">Tags</label>
-          <Input id="tags" value={metadata.tags.join(', ')} readOnly />
+          <label className="block text-sm font-medium text-gray-700">Tags</label>
+          <div className="flex flex-wrap gap-2 mt-2">
+            {metadata.tags.map((tag, index) => (
+              <Badge key={index} variant="secondary">{tag}</Badge>
+            ))}
+          </div>
         </div>
       </CardContent>
     </Card>
