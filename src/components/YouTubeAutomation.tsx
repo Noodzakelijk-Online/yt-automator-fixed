@@ -14,7 +14,10 @@ import SchedulingFeature from './SchedulingFeature';
 
 const YouTubeAutomation = () => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [generatedData, setGeneratedData] = useState<any>(null);
+  const [transcription, setTranscription] = useState<string>('');
+  const [summary, setSummary] = useState<string>('');
+  const [relevantText, setRelevantText] = useState<string>('');
+  const [metadata, setMetadata] = useState<any>(null);
 
   const { isLoading, error, data, refetch } = useQuery({
     queryKey: ['automateYouTube'],
@@ -26,11 +29,8 @@ const YouTubeAutomation = () => {
         title: "Exciting New Features in Web Development 2024",
         description: "Explore the latest trends and innovations in web development for 2024. This video covers new JavaScript APIs, CSS improvements, and performance optimizations that will revolutionize how we build websites.",
         tags: ['web development', '2024 trends', 'JavaScript', 'CSS', 'performance'],
-        transcription: "In this video, we'll be discussing the exciting new features coming to web development in 2024...",
-        summary: "This video provides an overview of upcoming web development trends for 2024, focusing on new JavaScript APIs, CSS enhancements, and performance optimization techniques.",
         thumbnailUrl: "https://example.com/thumbnail.jpg",
         keywordSuggestions: ['frontend development', 'web optimization', 'JavaScript features', 'CSS advancements', 'performance tuning'],
-        relevantText: "Web development is constantly evolving, and 2024 brings exciting new features that will enhance both developer productivity and user experience. From advanced JavaScript APIs to cutting-edge CSS capabilities, these innovations will shape the future of web applications.",
         category: "Science & Technology",
         privacyStatus: "public",
         license: "youtube",
@@ -49,9 +49,25 @@ const YouTubeAutomation = () => {
 
   useEffect(() => {
     if (data) {
-      setGeneratedData(data);
+      setMetadata(data);
     }
   }, [data]);
+
+  const handleTranscriptionComplete = (newTranscription: string) => {
+    setTranscription(newTranscription);
+  };
+
+  const handleSummaryGenerated = (newSummary: string) => {
+    setSummary(newSummary);
+  };
+
+  const handleRelevantTextGenerated = (newRelevantText: string) => {
+    setRelevantText(newRelevantText);
+  };
+
+  const handleMetadataChange = (newMetadata: any) => {
+    setMetadata(newMetadata);
+  };
 
   return (
     <Card className="p-6 space-y-6">
@@ -66,14 +82,14 @@ const YouTubeAutomation = () => {
 
       {error && <p className="text-red-500">Error: {(error as Error).message}</p>}
 
-      {generatedData && (
+      {metadata && (
         <div className="space-y-6">
-          <MetadataGenerator metadata={generatedData} />
-          <TranscriptionService transcription={generatedData.transcription} />
-          <SummaryGenerator summary={generatedData.summary} />
-          <ThumbnailGenerator thumbnailUrl={generatedData.thumbnailUrl} />
-          <KeywordSuggestions keywords={generatedData.keywordSuggestions} />
-          <RelevantTextGenerator text={generatedData.relevantText} />
+          <MetadataGenerator metadata={metadata} onMetadataChange={handleMetadataChange} />
+          <TranscriptionService videoFile={videoFile} onTranscriptionComplete={handleTranscriptionComplete} />
+          <SummaryGenerator transcription={transcription} onSummaryGenerated={handleSummaryGenerated} />
+          <RelevantTextGenerator transcription={transcription} summary={summary} onRelevantTextGenerated={handleRelevantTextGenerated} />
+          <ThumbnailGenerator thumbnailUrl={metadata.thumbnailUrl} />
+          <KeywordSuggestions keywords={metadata.keywordSuggestions} />
           <SocialMediaLinks />
           <SchedulingFeature />
         </div>
