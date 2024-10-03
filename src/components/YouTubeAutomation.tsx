@@ -23,7 +23,7 @@ const YouTubeAutomation = () => {
         title: 'Exciting New Features in Web Development 2024',
         description: 'Explore the latest trends and innovations in web development for 2024. This video covers new JavaScript APIs, CSS improvements, and performance optimizations that will revolutionize how we build websites.',
         tags: ['web development', '2024 trends', 'JavaScript', 'CSS', 'performance'],
-        transcription: 'In this video, we'll be discussing the exciting new features coming to web development in 2024...',
+        transcription: "In this video, we'll be discussing the exciting new features coming to web development in 2024...",
         summary: 'This video provides an overview of upcoming web development trends for 2024, focusing on new JavaScript APIs, CSS enhancements, and performance optimization techniques.',
       };
     },
