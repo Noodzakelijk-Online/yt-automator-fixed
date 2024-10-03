@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Loader2 } from 'lucide-react';
 import TitleGenerator from './TitleGenerator';
@@ -35,45 +33,56 @@ const YouTubeAutomation = () => {
     enabled: false,
   });
 
+  useEffect(() => {
+    if (videoFile) {
+      refetch();
+    }
+  }, [videoFile, refetch]);
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setVideoFile(event.target.files[0]);
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    const result = await refetch();
-    if (result.data) {
-      setGeneratedData(result.data);
+  useEffect(() => {
+    if (data) {
+      setGeneratedData(data);
     }
-  };
+  }, [data]);
 
   return (
     <Card className="p-6">
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-6">
         <div>
-          <Label htmlFor="video-upload">Upload Video</Label>
-          <Input id="video-upload" type="file" onChange={handleFileChange} accept="video/*" />
+          <Input 
+            id="video-upload" 
+            type="file" 
+            onChange={handleFileChange} 
+            accept="video/*"
+            className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+          />
+          {isLoading && (
+            <div className="mt-4 flex items-center justify-center">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <span>Processing video...</span>
+            </div>
+          )}
         </div>
-        <Button type="submit" disabled={!videoFile || isLoading}>
-          {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-          Generate YouTube Data
-        </Button>
-      </form>
 
-      {error && <p className="text-red-500 mt-4">Error: {(error as Error).message}</p>}
+        {error && <p className="text-red-500 mt-4">Error: {(error as Error).message}</p>}
 
-      {generatedData && (
-        <div className="mt-8 space-y-6">
-          <TitleGenerator title={generatedData.title} />
-          <TranscriptionSummary summary={generatedData.summary} />
-          <SocialMediaLinks />
-          <RelevantTextGenerator text={generatedData.relevantText} />
-          <PlaylistAssigner playlist={generatedData.playlist} />
-          <HierarchicalNumbering number={generatedData.hierarchicalNumber} />
-        </div>
-      )}
+        {generatedData && (
+          <div className="mt-8 space-y-6">
+            <TitleGenerator title={generatedData.title} />
+            <TranscriptionSummary summary={generatedData.summary} />
+            <SocialMediaLinks />
+            <RelevantTextGenerator text={generatedData.relevantText} />
+            <PlaylistAssigner playlist={generatedData.playlist} />
+            <HierarchicalNumbering number={generatedData.hierarchicalNumber} />
+          </div>
+        )}
+      </div>
     </Card>
   );
 };
