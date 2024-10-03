@@ -8,6 +8,7 @@ import TranscriptionSummary from './TranscriptionSummary';
 import SocialMediaLinks from './SocialMediaLinks';
 import ThumbnailGenerator from './ThumbnailGenerator';
 import KeywordSuggestions from './KeywordSuggestions';
+import RelevantTextGenerator from './RelevantTextGenerator';
 
 const YouTubeAutomation = () => {
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -27,6 +28,12 @@ const YouTubeAutomation = () => {
         summary: "This video provides an overview of upcoming web development trends for 2024, focusing on new JavaScript APIs, CSS enhancements, and performance optimization techniques.",
         thumbnailUrl: "https://example.com/thumbnail.jpg",
         keywordSuggestions: ['frontend development', 'web optimization', 'JavaScript features', 'CSS advancements', 'performance tuning'],
+        relevantText: "Web development is constantly evolving, and 2024 brings exciting new features that will enhance both developer productivity and user experience. From advanced JavaScript APIs to cutting-edge CSS capabilities, these innovations will shape the future of web applications.",
+        category: "Science & Technology",
+        privacyStatus: "public",
+        license: "youtube",
+        embeddable: true,
+        publicStatsViewable: true,
       };
     },
     enabled: false,
@@ -63,6 +70,7 @@ const YouTubeAutomation = () => {
           <TranscriptionSummary transcription={generatedData.transcription} summary={generatedData.summary} />
           <ThumbnailGenerator thumbnailUrl={generatedData.thumbnailUrl} />
           <KeywordSuggestions keywords={generatedData.keywordSuggestions} />
+          <RelevantTextGenerator text={generatedData.relevantText} />
           <SocialMediaLinks />
         </div>
       )}
