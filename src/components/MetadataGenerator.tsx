@@ -55,11 +55,11 @@ const MetadataGenerator: React.FC<MetadataGeneratorProps> = ({ metadata }) => {
           <Input id="license" value={metadata.license} readOnly />
         </div>
         <div className="flex items-center space-x-2">
-          <Switch id="embeddable" checked={metadata.embeddable} readOnly />
+          <Switch id="embeddable" checked={metadata.embeddable} onCheckedChange={() => {}} />
           <Label htmlFor="embeddable">Embeddable</Label>
         </div>
         <div className="flex items-center space-x-2">
-          <Switch id="publicStatsViewable" checked={metadata.publicStatsViewable} readOnly />
+          <Switch id="publicStatsViewable" checked={metadata.publicStatsViewable} onCheckedChange={() => {}} />
           <Label htmlFor="publicStatsViewable">Public Stats Viewable</Label>
         </div>
       </CardContent>
